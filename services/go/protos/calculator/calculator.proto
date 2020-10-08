@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option go_package = "calculator;calculator";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    version: "1.0";
+  };
+  external_docs: {
+    url: "https://github.com/castlemilk/envoy-playground/services/go";
+    description: "Calculator";
+  }
+  schemes: HTTPS;
+};
+
+enum Operation {
+  ADD = 0;
+  SUBTRACT = 1;
+}
+
+message BinaryOperation {
+  float first_operand = 1;
+  float second_operand = 2;
+  Operation operation = 3;
+};
+
+message CalculationResult {
+  float result = 1;
+};
+
+service Calculator {
+  rpc Calculate (BinaryOperation) returns (CalculationResult) {
+    option (google.api.http) = {
+      post: "/api/v1/calculator"
+      body: "*"
+  };
+  }
+};
